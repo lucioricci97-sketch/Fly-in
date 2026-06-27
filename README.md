@@ -156,20 +156,10 @@ Every target is met.
 
 ### Complexity
 
-Let `V` = zones, `E` = connections, `D` = drones.
-
-- Parsing: `O(V + E)`.
-- Each Dijkstra call: `O((V + E) log V)`; we run it up to `k = 8`
-  times, so path planning is `O(k · (V + E) log V)`.
-- Simulation: each turn touches every non-delivered drone once, so a
-  turn is `O(D)`. The total turn count `T` is bounded by the path
-  length plus the bottleneck queue, so the whole simulation is
-  `O(D · T)`.
-
-Paths are computed **once** at startup and cached on each `Drone`'s
-`path` attribute. The only per-turn state we maintain is
-`zone_load`, `link_load`, and each drone's `path_index` — memory is
-`O(V + E + D)`.
+- **Reading the map:** The program looks at every zone and connection exactly once to build the map.
+- **Finding paths:** We use Dijkstra's algorithm up to 8 times to find alternative routes. The time it takes depends on how many zones and connections the map has, but it handles large maps very quickly.
+- **Running the simulation:** During each turn, the program only checks the drones that haven't reached the end yet. The total time depends on the number of drones multiplied by the total number of turns they take.
+- **Memory usage:** We only calculate the paths once at the very beginning and save them. During the simulation, we only keep track of a few numbers: how many drones are in each zone, how full the connections are, and what step each drone is on. This makes our memory usage incredibly small and efficient.
 
 ## Visual representation
 

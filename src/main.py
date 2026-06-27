@@ -36,7 +36,6 @@ def _build_argparser() -> argparse.ArgumentParser:
 
 def main(argv: Optional[List[str]] = None) -> int:
     """Program entry. Returns the process exit code."""
-    
     args = _build_argparser().parse_args(argv)
     graph = safe_parse_map(args.map_file)
     if graph is None:

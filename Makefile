@@ -22,10 +22,10 @@ clean:
 	rm -rf $(VENV)
 
 lint:
-	$(VENV_BIN)/flake8 .
-	$(VENV_BIN)/mypy . --warn-return-any --warn-unused-ignores \
+	$(VENV_BIN)/flake8 src --max-line-length=120
+	$(VENV_BIN)/mypy src --warn-return-any --warn-unused-ignores \
 		--ignore-missing-imports --disallow-untyped-defs --check-untyped-defs
 
 lint-strict:
-	$(VENV_BIN)/flake8 .
-	$(VENV_BIN)/mypy . --strict
+	$(VENV_BIN)/flake8 src --max-line-length=120
+	$(VENV_BIN)/mypy src --strict

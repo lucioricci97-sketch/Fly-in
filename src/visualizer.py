@@ -52,7 +52,6 @@ class Visualizer:
         self._latest_moves: List[Tuple[int, str]] = []
         self._compute_layout()
 
-
     def _compute_layout(self) -> None:
         """Map zone (x, y) coords to screen pixels (fits the window)."""
         xs = [z.x for z in self.graph.zones.values()]
@@ -61,16 +60,16 @@ class Visualizer:
         min_y, max_y = min(ys), max(ys)
         span_x = max(1, max_x - min_x)
         span_y = max(1, max_y - min_y)
-        
+
         # INCREASED margins to completely clear the UI panels AND the circle radius
         left_margin = 60
         right_margin = 250   # Safe zone for the Legend
         top_margin = 120     # Pushed down to clear the top UI header
         bottom_margin = 120  # Pushed up to clear the bottom UI and zone names
-        
+
         usable_w = max(100, self.WIDTH - left_margin - right_margin)
-        usable_h = max(100, self.HEIGHT - top_margin - bottom_margin) 
-        
+        usable_h = max(100, self.HEIGHT - top_margin - bottom_margin)
+
         self._pos: Dict[str, Tuple[int, int]] = {}
         for zone in self.graph.zones.values():
             nx = (zone.x - min_x) / span_x if span_x > 0 else 0.5
@@ -78,7 +77,6 @@ class Visualizer:
             px = int(left_margin + nx * usable_w)
             py = int(top_margin + ny * usable_h)
             self._pos[zone.name] = (px, py)
-
 
     def run(self) -> None:
         """Open the window and run until the user closes it."""
@@ -98,7 +96,7 @@ class Visualizer:
                     self.HEIGHT = event.h
                     # Grab the auto-resized surface instead of recreating the window!
                     # This prevents the OS from canceling your mouse drag.
-                    screen = pygame.display.get_surface()
+                    screen = pygame.display.get_surface() or screen
                     self._compute_layout()
                 elif event.type == pygame.KEYDOWN:
                     if event.key in (pygame.K_ESCAPE, pygame.K_q):
@@ -119,7 +117,7 @@ class Visualizer:
             pygame.display.flip()
             clock.tick(30)
         pygame.quit()
-    
+
     def _do_step(self) -> None:
         if self.simulator.all_delivered():
             return
@@ -134,13 +132,13 @@ class Visualizer:
         big_font: pygame.font.Font,
     ) -> None:
         screen.fill(BG_COLOR)
-        
+
         # Draw background grid (graph paper style)
         for x in range(0, self.WIDTH, 40):
             pygame.draw.line(screen, GRID_COLOR, (x, 0), (x, self.HEIGHT))
         for y in range(0, self.HEIGHT, 40):
             pygame.draw.line(screen, GRID_COLOR, (0, y), (self.WIDTH, y))
-            
+
         self._draw_edges(screen)
         self._draw_zones(screen, font)
         self._draw_drones(screen, font)
@@ -182,16 +180,16 @@ class Visualizer:
         for zone in self.graph.zones.values():
             cx, cy = self._pos[zone.name]
             radius = 28
-            
+
             fill_color = self._zone_fill(zone)
             border_color = self._zone_border(zone)
-            
+
             # 1. Base fill (Instantly tells you the zone's mechanics)
             pygame.draw.circle(screen, fill_color, (cx, cy), radius)
-            
+
             # 2. Thick colored border (Satisfies the subject's metadata rule)
             pygame.draw.circle(screen, border_color, (cx, cy), radius, 4)
-            
+
             # Render name nicely below
             label = font.render(zone.name, True, TEXT_COLOR)
             bg_rect = label.get_rect(center=(cx, cy + radius + 14))
@@ -214,7 +212,7 @@ class Visualizer:
             else:
                 pos = self._pos[drone.position]
             clusters.setdefault(pos, []).append(drone.id)
-            
+
         for pos, ids in clusters.items():
             # Spread multiple drones out into a neat grid so they NEVER overlap
             for i, drone_id in enumerate(ids):
@@ -223,13 +221,13 @@ class Visualizer:
                 # Calculate an offset so they sit next to each other
                 offset_x = (col * 24) - (min(len(ids), 3) - 1) * 12
                 offset_y = (row * 24) - (len(ids) // 3) * 12
-                
+
                 d_pos = (pos[0] + offset_x, pos[1] + offset_y)
-                
+
                 # Draw small dark badge
                 pygame.draw.circle(screen, DRONE_BG, d_pos, 11)
-                pygame.draw.circle(screen, (20, 20, 20), d_pos, 11, 2) # border
-                
+                pygame.draw.circle(screen, (20, 20, 20), d_pos, 11, 2)      # border
+
                 txt = font.render(f"{drone_id}", True, DRONE_TEXT)
                 txt_rect = txt.get_rect(center=d_pos)
                 screen.blit(txt, txt_rect)
@@ -251,7 +249,7 @@ class Visualizer:
             True, TEXT_COLOR
         )
         screen.blit(delivered_text, (220, 18))
-        
+
         # Bottom Left: Controls & Last Move
         help_text = font.render(
             "SPACE/RIGHT step  |  A auto  |  R reset  |  ESC quit",
@@ -274,7 +272,7 @@ class Visualizer:
             ("Restricted (Slow)", (255, 190, 190)),
             ("Blocked", (160, 160, 160))
         ]
-        
+
         # Create a subtle background box for the legend
         pygame.draw.rect(screen, (255, 255, 255), (self.WIDTH - 210, 15, 195, 145), border_radius=6)
         pygame.draw.rect(screen, (200, 200, 210), (self.WIDTH - 210, 15, 195, 145), 2, border_radius=6)
@@ -289,6 +287,7 @@ class Visualizer:
             label = font.render(text, True, TEXT_COLOR)
             screen.blit(label, (start_x + 15, start_y - 7))
             start_y += 20
+
 
 def visualize(graph: Graph) -> None:
     """Convenience: build a Visualizer and run it."""
