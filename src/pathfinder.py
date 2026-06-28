@@ -1,6 +1,3 @@
-"""Pathfinding: hand-rolled Dijkstra plus a multi-path extractor."""
-from __future__ import annotations
-
 import heapq
 from typing import Dict, List, Optional, Set, Tuple
 

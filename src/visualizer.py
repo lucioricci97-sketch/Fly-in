@@ -1,6 +1,3 @@
-"""Pygame visualizer for the Fly-in simulation."""
-from __future__ import annotations
-
 from typing import Dict, List, Optional, Tuple
 
 import pygame
@@ -37,7 +34,7 @@ BLOCKED_COLOR = (180, 180, 180)
 
 
 class Visualizer:
-    """Display the graph and step through the simulation visually."""
+    """Pygame visualizer for the Fly-in simulation."""
 
     WIDTH = 1100
     HEIGHT = 720

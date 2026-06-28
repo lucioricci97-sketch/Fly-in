@@ -1,11 +1,3 @@
-"""Fly-in entry point.
-
-Usage::
-
-    python -m src <map_file> [--no-visual] [--output result.txt]
-"""
-from __future__ import annotations
-
 import argparse
 import sys
 from typing import List, Optional

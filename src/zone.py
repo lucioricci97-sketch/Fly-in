@@ -1,11 +1,8 @@
-"""Zone class: a single node in the drone network."""
-from __future__ import annotations
-
 from typing import Optional
 
 
 class Zone:
-    """A zone (graph node) where drones can rest or pass through.
+    """Zone class: a single node in the drone network,where drones can rest or pass through.
 
     Attributes:
         name: Unique zone name (no dashes, no spaces).

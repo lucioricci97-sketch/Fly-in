@@ -1,15 +1,5 @@
-"""Map file parser. Converts a .txt map into a Graph object.
-
-The actual parsing lives in the ``MapParser`` class so the whole
-project is consistently object-oriented. Two module-level helpers
-(``parse_map`` and ``safe_parse_map``) are kept as thin wrappers
-for the callers that just want a one-liner.
-"""
-from __future__ import annotations
-
 import re
 from typing import Dict, Optional, Tuple
-
 from .connection import Connection
 from .graph import Graph
 from .zone import Zone
@@ -27,7 +17,7 @@ class ParseError(Exception):
 
 
 class MapParser:
-    """Read a map text file and build a fully populated ``Graph``.
+    """Reads and converts a map text file into Graph object.
 
     Usage::
 
@@ -43,7 +33,6 @@ class MapParser:
     def __init__(self, path: str) -> None:
         self.path = path
 
-    # ------------------------------------------------------------ public API
     def parse(self) -> Graph:
         """Parse the file and return the built ``Graph``.
 
@@ -75,7 +64,6 @@ class MapParser:
             raise ParseError(0, str(exc)) from exc
         return graph
 
-    # ------------------------------------------------------------- dispatch
     def _dispatch(self, line: str, line_no: int, graph: Graph) -> None:
         """Route a single non-comment line to its builder."""
         prefix, body = self._split_prefix(line, line_no)
@@ -97,7 +85,6 @@ class MapParser:
         except ValueError as exc:
             raise ParseError(line_no, str(exc)) from exc
 
-    # ----------------------------------------------------------- metadata
     def _parse_metadata(self, raw: str, line_no: int) -> Dict[str, str]:
         """Extract a ``[key=value key2=value2]`` block into a dict."""
         match = self._METADATA_RE.search(raw)
@@ -124,7 +111,6 @@ class MapParser:
         """Return the line with the metadata block removed."""
         return self._METADATA_RE.sub("", raw).strip()
 
-    # ----------------------------------------------------------- line kinds
     def _parse_zone_line(
         self, raw: str, line_no: int, is_start: bool, is_end: bool
     ) -> Zone:
@@ -191,7 +177,6 @@ class MapParser:
                 raise ParseError(line_no, "max_link_capacity must be >= 1")
         return a, b, cap
 
-    # ------------------------------------------------------------- helpers
     @staticmethod
     def _parse_int(value: str, line_no: int, field: str) -> int:
         try:
@@ -208,7 +193,6 @@ class MapParser:
         return prefix.strip(), body.strip()
 
 
-# ------------------------------------------------------ module-level glue
 def parse_map(path: str) -> Graph:
     """Convenience: ``MapParser(path).parse()``.
 

@@ -1,8 +1,4 @@
-"""Turn-by-turn drone simulation engine."""
-from __future__ import annotations
-
 from typing import Dict, List, Optional, Set, Tuple
-
 from .drone import Drone
 from .graph import Graph
 from .pathfinder import PathFinder
@@ -12,7 +8,7 @@ Move = Tuple[Drone, str]  # (drone, label printed at end of turn)
 
 
 class Simulator:
-    """Run the discrete-turn simulation.
+    """Turn-by-turn drone simulation engine
 
     Strategy (kept intentionally simple):
 
@@ -40,7 +36,6 @@ class Simulator:
         self.paths: List[List[str]] = []
         self._build_drones()
 
-    # ------------------------------------------------------------------ setup
     def _build_drones(self) -> None:
         """Create drones and plan their paths."""
         finder = PathFinder(self.graph)
@@ -66,7 +61,6 @@ class Simulator:
         # All drones start at the start hub; it has infinite cap so loading
         # the count is fine but unused. Keep it at 0 to skip start tracking.
 
-    # ------------------------------------------------------------------ run
     def run(self) -> int:
         """Run until all drones are delivered. Return the turn count."""
         stalled = 0
@@ -87,7 +81,6 @@ class Simulator:
         """True once every drone has reached the end zone."""
         return all(d.delivered for d in self.drones)
 
-    # ------------------------------------------------------------------ step
     def step(self) -> List[Move]:
         """Advance one turn. Return the list of moves to print.
 
@@ -209,7 +202,6 @@ class Simulator:
             return (a, b)
         return (b, a)
 
-    # ------------------------------------------------------------------ output
     def format_output(self) -> str:
         """Return the textual turn-by-turn output required by the subject."""
         lines: List[str] = []

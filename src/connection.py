@@ -1,9 +1,8 @@
-"""Connection class: a bidirectional edge between two zones."""
-from __future__ import annotations
+from typing import Tuple
 
 
 class Connection:
-    """A bidirectional link between two zones.
+    """Connection class: A bidirectional link between two zones.
 
     Attributes:
         a, b: Names of the two endpoints (order is normalised so a < b).
@@ -23,7 +22,7 @@ class Connection:
         self.max_capacity = max_capacity
 
     @property
-    def key(self) -> tuple[str, str]:
+    def key(self) -> Tuple[str, str]:
         """Canonical key for the edge (ordered tuple)."""
         return (self.a, self.b)
 

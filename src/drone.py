@@ -1,11 +1,8 @@
-"""Drone class: tracks a single drone's state during the simulation."""
-from __future__ import annotations
-
 from typing import List, Optional
 
 
 class Drone:
-    """A single drone moving through the network.
+    """Drone class: tracks a single drone moving through the network.
 
     Attributes:
         id: Numeric drone ID (D1, D2, ...).

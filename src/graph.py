@@ -1,14 +1,10 @@
-"""Graph class: holds zones + connections and answers neighbour queries."""
-from __future__ import annotations
-
 from typing import Dict, List, Optional, Tuple
-
 from .connection import Connection
 from .zone import Zone
 
 
 class Graph:
-    """The drone network.
+    """Graph class : The drone network.
 
     Holds all zones, all connections, and lets you ask:
     - which zones are neighbours of zone X
