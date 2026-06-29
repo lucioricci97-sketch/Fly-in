@@ -1,0 +1,6 @@
+nb_drones: 10
+start_hub: start 0 0
+hub: choke_point 1 0 [max_drones=1 color=red]
+end_hub: end 2 0
+connection: start-choke_point [max_link_capacity=1]
+connection: choke_point-end [max_link_capacity=1]

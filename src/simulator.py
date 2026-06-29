@@ -122,7 +122,7 @@ class Simulator:
             if target == self.graph.end:
                 drone.delivered = True
                 self.zone_load[target] = max(0, self.zone_load[target] - 1)
-        return out, just_arrived
+        return (out, just_arrived)
 
     def _advance_ready_drones(
         self,

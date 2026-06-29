@@ -179,6 +179,7 @@ class MapParser:
 
     @staticmethod
     def _parse_int(value: str, line_no: int, field: str) -> int:
+        """ Return the int value of str"""
         try:
             return int(value)
         except ValueError as exc:

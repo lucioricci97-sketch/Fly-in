@@ -28,7 +28,7 @@ BG_COLOR = (245, 245, 250)      # Light off-white
 GRID_COLOR = (230, 230, 235)    # Subtle graph paper lines
 EDGE_COLOR = (150, 150, 160)
 TEXT_COLOR = (30, 30, 30)       # Dark text
-DRONE_BG = (50, 50, 60)         # Dark grey badge for drones
+DRONE_BG = (50, 50, 60)
 DRONE_TEXT = (255, 255, 255)
 BLOCKED_COLOR = (180, 180, 180)
 
@@ -58,11 +58,10 @@ class Visualizer:
         span_x = max(1, max_x - min_x)
         span_y = max(1, max_y - min_y)
 
-        # INCREASED margins to completely clear the UI panels AND the circle radius
         left_margin = 60
         right_margin = 250   # Safe zone for the Legend
-        top_margin = 120     # Pushed down to clear the top UI header
-        bottom_margin = 120  # Pushed up to clear the bottom UI and zone names
+        top_margin = 120
+        bottom_margin = 120
 
         usable_w = max(100, self.WIDTH - left_margin - right_margin)
         usable_h = max(100, self.HEIGHT - top_margin - bottom_margin)
@@ -116,6 +115,7 @@ class Visualizer:
         pygame.quit()
 
     def _do_step(self) -> None:
+        """ Step forward """
         if self.simulator.all_delivered():
             return
         moves = self.simulator.step()
@@ -130,7 +130,7 @@ class Visualizer:
     ) -> None:
         screen.fill(BG_COLOR)
 
-        # Draw background grid (graph paper style)
+        """Draw background grid (graph paper style)"""
         for x in range(0, self.WIDTH, 40):
             pygame.draw.line(screen, GRID_COLOR, (x, 0), (x, self.HEIGHT))
         for y in range(0, self.HEIGHT, 40):
@@ -142,7 +142,7 @@ class Visualizer:
         self._draw_hud(screen, big_font, font)
 
     def _draw_edges(self, screen: pygame.Surface) -> None:
-        """This was the function that got accidentally deleted!"""
+        """Draw edges(links)"""
         for (a, b), conn in self.graph.connections.items():
             pa, pb = self._pos[a], self._pos[b]
             pygame.draw.line(screen, EDGE_COLOR, pa, pb, 3)
@@ -174,6 +174,7 @@ class Visualizer:
     def _draw_zones(
         self, screen: pygame.Surface, font: pygame.font.Font
     ) -> None:
+        """Draws zones"""
         for zone in self.graph.zones.values():
             cx, cy = self._pos[zone.name]
             radius = 28
@@ -196,7 +197,7 @@ class Visualizer:
     def _draw_drones(
         self, screen: pygame.Surface, font: pygame.font.Font
     ) -> None:
-        # Cluster drones by their visual position.
+        """ Cluster drones by their visual position."""
         clusters: Dict[Tuple[int, int], List[int]] = {}
         for drone in self.simulator.drones:
             if drone.delivered:
@@ -235,6 +236,7 @@ class Visualizer:
         big_font: pygame.font.Font,
         font: pygame.font.Font,
     ) -> None:
+        """ Draw the information display """
         # Top Left: Turn & Delivery status
         turn_text = big_font.render(
             f"Turn: {self.simulator.turn}", True, TEXT_COLOR
@@ -294,7 +296,7 @@ def visualize(graph: Graph) -> None:
 def visualize_existing(
     graph: Graph, simulator: Optional[Simulator] = None
 ) -> None:
-    """Visualize using an existing Simulator (kept for symmetry)."""
+    """Visualize using an existing Simulator."""
     visualizer = Visualizer(graph)
     if simulator is not None:
         visualizer.simulator = simulator
